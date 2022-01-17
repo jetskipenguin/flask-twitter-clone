@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} View All Users {% endblock %}
+
+{% block content %}
+    <head>
+        <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='styles/view.css')}}"/>
+    </head>
+
+    {% for item in values %}
+    <img src={{item.pfp_url}} alt="image" width="48" height="48" class="rounded-circle">
+    <div id='user'>
+        <b>Name:</b>
+        <p>{{item.name}}</p>
+        <b>Email:</b>
+        <p>{{item.email}}</p>
+        <hr>
+    </div>
+    {% endfor %}
+
+{% endblock %}

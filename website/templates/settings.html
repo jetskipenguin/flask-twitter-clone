@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %} Settings {% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+            <h1>{{user}}'s Profile</h1>
+            <br>
+            
+            <h2>Change Email</h2>
+            <hr>
+            <form method='POST'>
+                <input type='email' name='email' placeholder='Enter Email'/>
+                <input type="submit" name='email' value='Submit' />
+            </form>
+
+            <p>Current Email: {{email if email}}</p>
+
+            <br>
+
+            <h2>Upload Profile Picture</h2>
+            <hr>
+
+            <form method='POST' enctype="multipart/form-data">
+                
+                <div class="mb-3">
+                    <label class="form-label" for="customFile">Select Image</label>
+                    <input oninput="filesize(this);" type="file" class="form-control" name="image" id="customFile">
+                </div>
+                <a href="{{ url_for('pages.settings') }}">
+                    <button type="submit" class="btn btn-primary" name='image'>Submit</button>
+                </a>
+            </form>
+            <br>
+            <br>
+            <br>
+            <a href="{{ url_for('pages.logout') }}">
+                <button>Logout</button>
+            </a>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<!--Store size of uploaded image in cookie-->
+<script>
+        function filesize(elem) {
+            document.cookie = `filesize=${elem.files[0].size}`;
+        }
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %} View All Posts {% endblock %}
+
+{% block content %}
+
+    {% for item in values %}
+    <div id='post' class="card">
+        <div class="card-header"><b>{{item.name}}</b></div>
+        <div class="card-body">
+            {{item.text}}
+            {% if item.img_src %}
+                <image src={{item.img_src}} width="100" height="100" />
+            {% endif %}
+        </div>
+        <div class="card-footer text-muted">
+            {{item.timestamp}}
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}
