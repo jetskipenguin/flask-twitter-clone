@@ -5,40 +5,52 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col align-self-center">
 
             <h1>{{user}}'s Profile</h1>
             <br>
             
-            <h2>Change Email</h2>
+            <h3>Change Email</h3>
             <hr>
-            <form method='POST'>
-                <input type='email' name='email' placeholder='Enter Email'/>
-                <input type="submit" name='email' value='Submit' />
-            </form>
-
+            
             <p>Current Email: {{email if email}}</p>
+            
+            <form method='POST'>
+                <div class="mb-2">
+                    <input type='email' name='email' placeholder='Enter Email'/>
+                </div>
+                <button type="submit" class="btn btn-primary" name='email'>Submit</button>
+            </form>
 
             <br>
 
-            <h2>Upload Profile Picture</h2>
+            <h3>Change Bio</h3>
+            <hr>
+            <form method="POST">
+                <div class="mb-2">
+                    <textarea class="form-control" rows="5" name="bio"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" name='bio'>Submit</button>
+            </form>
+
+            <br>
+            <br>
+
+            <h3>Upload Profile Picture</h3>
             <hr>
 
             <form method='POST' enctype="multipart/form-data">
-                
-                <div class="mb-3">
-                    <label class="form-label" for="customFile">Select Image</label>
+                <div class="mb-2">
                     <input oninput="filesize(this);" type="file" class="form-control" name="image" id="customFile">
                 </div>
-                <a href="{{ url_for('pages.settings') }}">
-                    <button type="submit" class="btn btn-primary" name='image'>Submit</button>
-                </a>
+                <button type="submit" class="btn btn-primary" name='image'>Submit</button>
             </form>
             <br>
             <br>
             <br>
+            
             <a href="{{ url_for('pages.logout') }}">
-                <button>Logout</button>
+                <button class="btn btn-secondary" name="logout">Logout</button>
             </a>
 
         </div>

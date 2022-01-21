@@ -19,7 +19,7 @@
       
               <ul class="nav col-12 col-lg-auto me-lg-auto mb-2  justify-content-center mb-md-0">
                 <li><a href="{{url_for('home.index')}}" class="nav-link px-2 link-secondary">Home</a></li>
-                {% if user %}
+                {% if session['user'] %}
                 <li><a href="{{url_for('home.view_posts')}}" class="nav-link px-2 link-secondary">View Posts</a></li>
                 {% endif %}
               </ul>
@@ -38,7 +38,7 @@
       
               <div class="dropdown text-end">
                 <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src={{ session['pfp_url'] }} alt="image" width="48" height="48" class="rounded-circle">
+                  <img src="{{ url_for('static', filename=session['pfp_url']) }}" alt="image" width="48" height="48" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                   <li><a class="dropdown-item" href="{{url_for('pages.user', user=session['user'])}}">Profile</a></li>

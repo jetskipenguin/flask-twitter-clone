@@ -6,6 +6,7 @@ class users(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     pfp_url = db.Column(db.String(50))
+    bio = db.Column(db.String(400))
 
     def __init__(self, name, email, pfp_url):
         self.name = name

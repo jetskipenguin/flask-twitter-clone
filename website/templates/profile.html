@@ -3,10 +3,60 @@
 {% block title %} {{user}}'s Profile {% endblock %}
 
 {% block content %}
-<h1>{{user}}'s Profile</h1>
 
-<a href="{{ url_for('pages.logout') }}">
-    <button>Logout</button>
-</a>
+<div class="container">
+    {% if user %}
+    <!-- Profile picture and Username -->
+    <div class="row align-self-start">
+        
+            <div class="col-1">
+                <img src="{{ url_for('static', filename=session['pfp_url']) }}" alt="image" width="48" height="48" class="rounded-circle">
+            </div>
+            <div class="col">
+                <h1>{{user}}'s Profile</h1>
+            </div>
+        
+    </div>
+    <!-- User Bio -->
+    <div class="row">
+        <p>{{bio if bio}}</p>
+        <hr>
+    </div>
+    <!--User Posts Here-->
+    <div class="row">
+        {% for item in posts %}
+        <div id='post' class="card">
+            <div class="card-header"><b>{{item.name}}</b></div>
+            <div class="card-body">
+                {{item.text}}
+
+                {% if item.img_src %}
+                    <image src={{item.img_src}} width="100" height="100" />
+                {% endif %}
+        </div>
+        <div class="card-footer text-muted">
+            {{item.timestamp}}
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+
+    <!--Logout-->
+    {% if user == session['user'] %}
+    <div class="row">
+        <a href="{{ url_for('pages.logout') }}">
+            <button class="btn btn-secondary" name="logout">Logout</button>
+        </a>
+    </div>
+    {% endif %}
+
+    {% else %}
+            <h1>Sorry that user does not exist!</h1>
+    {% endif %}
+</div>
+
+
+
+
 
 {% endblock %}

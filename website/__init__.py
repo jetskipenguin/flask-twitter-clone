@@ -7,7 +7,7 @@ DB_NAME = 'users.sqlite3'
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path="", static_folder="static")
 
     ######### DATABASE CONFIGURATIONS
     app.secret_key = "SJ8SD6SJ28LH5L3B3N2"
@@ -17,7 +17,7 @@ def create_app():
 
     ######### IMAGE CONFIGURATIONS
     # image upload paths
-    app.config['ABSOLUTE_IMAGE_UPLOADS'] = 'C:\\Users\\colli\\Desktop\\experimental projects\\Python\\social\\website\\static\\images\\uploads'
+    app.config['ABSOLUTE_IMAGE_UPLOADS'] = 'C:\\Users\\Collin\\Documents\\Python\\flask-site\\website\\static\\images\\uploads'
     app.config['RELATIVE_IMAGE_UPLOADS'] = 'static\\images\\uploads'
     # profile picture filename
     app.config['PROFILE_FILENAME'] = '__PROFILE__.jfif'

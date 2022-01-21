@@ -9,29 +9,12 @@ pages = Blueprint('pages', __name__)
 
 @pages.route('<user>', methods=['POST', 'GET'])
 def user(user):
-    email = None
-    if user == session['user']:
-        if request.method == 'POST':
-            # get email from form
-            email = request.form['email']
-            # record email in session
-            session['email'] = email
-            # record email in database
-            found_user = users.query.filter_by(name=session['user']).first()
-            found_user.email = email
-            db.session.commit()
-            flash("Email saved!")
-        elif 'email' in session:
-            email = session['email']
-        else:
-            # if email not in session data, pull it from database
-            found_user = users.query.filter_by(name=session['user']).first()
-            email = found_user.email
-        
-        print(session['pfp_url'])
-        return render_template("profile.html", user=user)
+    found_user = users.query.filter_by(name=user).first()
+    user_posts = post.query.filter_by(name=user).all()
+    if found_user:
+        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts)
     else:
-        return render_template('profile.html', user=user)
+        return render_template('profile.html')
 
 
 @pages.route('settings', methods=['GET', 'POST'])
@@ -83,6 +66,14 @@ def settings():
             else:
                 user_email = ''
 
+        # check for bio change
+        if request.form.get('bio'):
+            user_bio = request.form['bio']
+            found_user = users.query.filter_by(name=session['user']).first()
+            found_user.bio = user_bio
+            db.session.commit()
+            flash("Bio Saved!")
+
         return render_template('settings.html', user=session['user'], email=user_email, profile_image=session['pfp_url'])
     else:
         return redirect(url_for('pages.login'))
@@ -115,9 +106,10 @@ def create_post():
             pst = post(session['user'], text, image_src)
             db.session.add(pst)
             db.session.commit()
+
             flash('Successfully created post!')
 
-            return redirect(url_for("pages.index"))
+            return redirect(url_for("home.index"))
 
         return render_template('create-post.html', user=session['user'], profile_image=session['pfp_url'])
     else:
