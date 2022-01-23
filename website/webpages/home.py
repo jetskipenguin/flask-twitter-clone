@@ -6,8 +6,14 @@ import os
 home = Blueprint('home', __name__)
 
 # TODO: enable searching for users
-@home.route('/')
+@home.route('/', methods=['POST', 'GET'])
 def index():
+    if request.method == "POST":
+        search = db.session.query(users).filter(users.name.like(request.form.get('search') + '%'))
+        for i in search:
+            print(i.name)
+        
+
     if 'user' in session:
         return render_template('index.html', user=session['user'], profile_image=session['pfp_url'])
     else:    

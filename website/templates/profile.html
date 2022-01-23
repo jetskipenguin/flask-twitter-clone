@@ -8,14 +8,27 @@
     {% if user %}
     <!-- Profile picture and Username -->
     <div class="row align-self-start">
-        
             <div class="col-1">
                 <img src="{{ url_for('static', filename=session['pfp_url']) }}" alt="image" width="48" height="48" class="rounded-circle">
             </div>
-            <div class="col">
+            <div class="col-9">
                 <h1>{{user}}'s Profile</h1>
+                <a href="{{ url_for('pages.following', user=user) }}">Following {{following_count}}</a>
+                <a href="{{ url_for('pages.followers', user=user) }}">Followers {{follower_count}} </a>
             </div>
-        
+            <div class="col-2">
+                {% if session['user'] %}
+                    {% if user != session['user'] and user not in session['following'] %}
+                    <form method="POST">
+                        <button class="btn btn-primary" name="follow" value="follow">Follow</button>
+                    </form>
+                    {% elif user != session['user'] %}
+                    <form method="POST">
+                        <button class="btn btn-secondary" name="unfollow" value="unfollow">Unfollow</button>
+                    </form>
+                    {% endif %}
+                {% endif %}
+            </div>
     </div>
     <!-- User Bio -->
     <div class="row">

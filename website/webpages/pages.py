@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, current_app
+from sqlalchemy.exc import SQLAlchemyError
 from ..models import users, post, db
 from ..functions import allowed_image, save_image
 import os
@@ -12,9 +13,41 @@ def user(user):
     found_user = users.query.filter_by(name=user).first()
     user_posts = post.query.filter_by(name=user).all()
     if found_user:
-        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts)
+        if request.method == "POST":
+            if user != session['user']:
+                client = users.query.filter_by(name=session['user']).first()
+                
+                # Unfollowing User
+                if request.form.get('unfollow') == 'unfollow':
+                    session['following'].remove(user)
+                    client.following.remove(user)
+
+                # Following User
+                if request.form.get('follow') == "follow":
+                    if user not in session['following']:
+                        session['following'].append(user)
+                        client.following.append(user)
+                
+                # Commit to database
+                try:
+                    db.session.commit()
+                except SQLAlchemyError:
+                    db.session.rollback()
+                    flash("Error Performing Action, Please Try Again later")
+
+        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts,follower_count=len(session['followers']), following_count=len(session['following']))
     else:
         return render_template('profile.html')
+
+@pages.route('following/<user>')
+def following(user):
+    if user == session['user']:
+        return render_template("following.html", following=session['following'])
+
+@pages.route('followers/<user>')
+def followers(user):
+    if user == session['user']:
+        return render_template("followers.html", followers=session['followers'])
 
 
 @pages.route('settings', methods=['GET', 'POST'])
@@ -127,12 +160,11 @@ def login():
         found_user = users.query.filter_by(name=session['user']).first()
         
         if found_user:
-            # if found_user.name == user:
-            #     flash('That username is taken')
-            #     return(redirect(url_for('pages.login')))
-            # add database entries to session data for user
             session['email'] = found_user.email
             session['pfp_url'] = found_user.pfp_url
+
+            session['following'] = list(found_user.following)
+            session['followers'] = list(found_user.followers)
         else:
             print("Adding new user")
             # add new user to database
@@ -158,4 +190,6 @@ def logout():
     session.pop("user", None)
     session.pop('email', None)
     session.pop('pfp_url', None)
+    session['following'] = []
+    session['followers'] = []
     return redirect(url_for('pages.login'))

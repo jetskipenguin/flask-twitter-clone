@@ -1,4 +1,6 @@
 from . import db
+from sqlalchemy.ext.mutable import MutableList
+from sqlalchemy import PickleType
 from datetime import datetime
 
 class users(db.Model):
@@ -7,6 +9,9 @@ class users(db.Model):
     email = db.Column(db.String(100))
     pfp_url = db.Column(db.String(50))
     bio = db.Column(db.String(400))
+
+    following = db.Column(MutableList.as_mutable(PickleType), default=[])
+    followers = db.Column(MutableList.as_mutable(PickleType), default=[])
 
     def __init__(self, name, email, pfp_url):
         self.name = name
