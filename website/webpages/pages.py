@@ -21,12 +21,14 @@ def user(user):
                 if request.form.get('unfollow') == 'unfollow':
                     session['following'].remove(user)
                     client.following.remove(user)
+                    found_user.followers.remove(session['user'])
 
                 # Following User
                 if request.form.get('follow') == "follow":
                     if user not in session['following']:
                         session['following'].append(user)
                         client.following.append(user)
+                        found_user.followers.append(session['user'])
                 
                 # Commit to database
                 try:
@@ -35,7 +37,23 @@ def user(user):
                     db.session.rollback()
                     flash("Error Performing Action, Please Try Again later")
 
-        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts,follower_count=len(session['followers']), following_count=len(session['following']))
+        # Set follower count appropriately
+        follower_count = 0
+        following_count = 0
+        if user == session['user']:
+            follower_count = len(session['followers'])
+            following_count=len(session['following'])
+        else:
+            # Pull found_user's follower counts
+            for i in found_user.followers:
+                follower_count += 1
+
+            for i in found_user.following:
+                following_count += 1
+            
+
+        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts,follower_count=follower_count, following_count=following_count)
+
     else:
         return render_template('profile.html')
 
@@ -43,12 +61,20 @@ def user(user):
 def following(user):
     if user == session['user']:
         return render_template("following.html", following=session['following'])
+    else:
+        # pull data from database
+        found_user = users.query.filter_by(name=user).first()
+        return render_template("following.html", following=found_user.following[:])
 
 @pages.route('followers/<user>')
 def followers(user):
     if user == session['user']:
         return render_template("followers.html", followers=session['followers'])
-
+    else:
+        # pull data from database
+        found_user = users.query.filter_by(name=user).first()
+        if found_user:
+            return render_template('followers.html', followers=found_user.followers[:])
 
 @pages.route('settings', methods=['GET', 'POST'])
 def settings():

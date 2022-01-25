@@ -6,7 +6,7 @@
     {% for user in following %}
     <div class="row">
         <div class="col">
-            <a href="url_for{(pages.user, user=user.name) }">{{ user }}</a>
+            <a href="{{ url_for('pages.user', user=user) }}">{{ user }}</a>
         </div>
     </div>
     {% endfor %}
