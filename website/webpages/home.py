@@ -1,7 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, current_app
 from ..models import users, post, db
-from ..functions import allowed_image, save_image
-import os
 
 home = Blueprint('home', __name__)
 
@@ -13,9 +11,17 @@ def index():
         for i in search:
             print(i.name)
         
+    if session['user']:
+        client = db.session.query(users).filter_by(name=session['user']).first()
+        posts = []
+        for user in client.following:
+            try:
+                for i in post.query.filter_by(name=user).all():
+                    posts.append(i)
+            except:
+                print("Couldn't recieve posts from database for {}!".format(user))
 
-    if 'user' in session:
-        return render_template('index.html', user=session['user'], profile_image=session['pfp_url'])
+        return render_template('index.html', user=session['user'], profile_image=session['pfp_url'], values=posts)
     else:    
         return render_template("index.html")
 
