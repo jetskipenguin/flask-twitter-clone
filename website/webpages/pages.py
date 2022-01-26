@@ -128,10 +128,13 @@ def settings():
         # check for bio change
         if request.form.get('bio'):
             user_bio = request.form['bio']
-            found_user = users.query.filter_by(name=session['user']).first()
-            found_user.bio = user_bio
-            db.session.commit()
-            flash("Bio Saved!")
+            if len(user_bio) > current_app.config['BIO_LENGTH']:
+                flash('Biography cannot be longer than {} chars!'.format(current_app.config['BIO_LENGTH']))
+            else:
+                found_user = users.query.filter_by(name=session['user']).first()
+                found_user.bio = user_bio
+                db.session.commit()
+                flash("Bio Saved!")
 
         return render_template('settings.html', user=session['user'], email=user_email, profile_image=session['pfp_url'])
     else:
@@ -157,16 +160,16 @@ def create_post():
                     # stores relative filepath
                     image_src = "{}\\{}\\{}".format(current_app.config['RELATIVE_IMAGE_UPLOADS'], session['user'], filename)
 
-            # TODO: add length checker
-            if request.form.get('text'):
-                text = request.form['text']
+            text = request.form.get('text')
 
             # add post to database
-            pst = post(session['user'], text, image_src)
-            db.session.add(pst)
-            db.session.commit()
-
-            flash('Successfully created post!')
+            if len(text) > current_app.config['POST_LENGTH']:
+                flash("Post text cannot be longer than {} chars!".format(current_app.config['POST_LENGTH']))
+            else:
+                pst = post(session['user'], text, image_src)
+                db.session.add(pst)
+                db.session.commit()
+                flash('Successfully created post!')
 
             return redirect(url_for("home.index"))
 

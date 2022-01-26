@@ -26,6 +26,9 @@ def create_app():
     # allowed image size
     app.config['ALLOWED_IMAGE_SIZE'] = 0.5 * 1024 * 1024
 
+    ########## LENGTH CONFIGURATIONS
+    app.config['BIO_LENGTH'] = 400
+    app.config['POST_LENGTH'] = 400
     
     # length of session tokens
     app.permanent_session_lifetime = timedelta(minutes=30)
