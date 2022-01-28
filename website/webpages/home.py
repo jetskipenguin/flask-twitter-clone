@@ -11,7 +11,7 @@ def index():
         for i in search:
             print(i.name)
         
-    if session['user']:
+    if 'user' in session:
         client = db.session.query(users).filter_by(name=session['user']).first()
         posts = []
         for user in client.following:
