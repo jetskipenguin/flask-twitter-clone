@@ -40,20 +40,13 @@ def user(user):
         # Set follower count appropriately
         follower_count = 0
         following_count = 0
-        if user == session['user']:
-            try:
-                follower_count = len(session['followers'])
-                following_count= len(session['following'])
-            except:
-                follower_count = 0
-                following_count = 0
-        else:
-            # Pull found_user's follower counts
-            for i in found_user.followers:
-                follower_count += 1
+        
+        # Pull found_user's follower counts
+        for i in found_user.followers:
+            follower_count += 1
 
-            for i in found_user.following:
-                following_count += 1
+        for i in found_user.following:
+            following_count += 1
             
 
         return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts,follower_count=follower_count, following_count=following_count)

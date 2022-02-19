@@ -27,7 +27,6 @@ def create_app():
     app.config['ALLOWED_IMAGE_EXTENSIONS'] = ['.png', '.jpg', '.jpeg', '.gif', '.jfif']
     # allowed image size
     app.config['ALLOWED_IMAGE_SIZE'] = 0.5 * 1024 * 1024
-    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
     ########## LENGTH CONFIGURATIONS
     app.config['BIO_LENGTH'] = 400

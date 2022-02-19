@@ -17,7 +17,7 @@
                 <a href="{{ url_for('pages.followers', user=user) }}">Followers {{follower_count}} </a>
             </div>
             <div class="col-2">
-                {% if session['user'] %}
+                {% if 'user' in session %}
                     {% if user != session['user'] and user not in session['following'] %}
                     <form method="POST">
                         <button class="btn btn-primary" name="follow" value="follow">Follow</button>
