@@ -41,8 +41,12 @@ def user(user):
         follower_count = 0
         following_count = 0
         if user == session['user']:
-            follower_count = len(session['followers'])
-            following_count=len(session['following'])
+            try:
+                follower_count = len(session['followers'])
+                following_count= len(session['following'])
+            except:
+                follower_count = 0
+                following_count = 0
         else:
             # Pull found_user's follower counts
             for i in found_user.followers:
