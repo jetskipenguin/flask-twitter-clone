@@ -1,5 +1,6 @@
 from flask import Flask
 from datetime import timedelta
+import os
 from os import path
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,7 +8,7 @@ DB_NAME = 'users.sqlite3'
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__, static_url_path="", static_folder="static")
+    app = Flask(__name__)
 
     ######### DATABASE CONFIGURATIONS
     app.secret_key = "SJ8SD6SJ28LH5L3B3N2"
@@ -17,14 +18,16 @@ def create_app():
 
     ######### IMAGE CONFIGURATIONS
     # image upload paths
-    app.config['ABSOLUTE_IMAGE_UPLOADS'] = 'C:\\Users\\Collin\\Documents\\Python\\flask-site\\website\\static\\images\\uploads'
-    app.config['RELATIVE_IMAGE_UPLOADS'] = 'static\\images\\uploads'
+    app.config['ABSOLUTE_IMAGE_UPLOADS'] = os.getcwd() + '\\website\\static\\images\\uploads'
+    app.config['RELATIVE_IMAGE_UPLOADS'] = 'images/uploads'
+    app.config['DEFAULT_PFP'] = 'images/default.jfif'
     # profile picture filename
     app.config['PROFILE_FILENAME'] = '__PROFILE__.jfif'
     # allowed image formats
     app.config['ALLOWED_IMAGE_EXTENSIONS'] = ['.png', '.jpg', '.jpeg', '.gif', '.jfif']
     # allowed image size
     app.config['ALLOWED_IMAGE_SIZE'] = 0.5 * 1024 * 1024
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 
     ########## LENGTH CONFIGURATIONS
     app.config['BIO_LENGTH'] = 400

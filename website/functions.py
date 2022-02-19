@@ -6,6 +6,7 @@ def allowed_image(filename, filesize, filepath, replace=False):
     # create filepath if it doesn't exist
     if not os.path.exists(filepath):
         print("Filepath does not exist")
+        print("Creating...", filepath)
         os.mkdir(filepath)
 
     # Check if filename is empty
@@ -35,6 +36,7 @@ def allowed_image(filename, filesize, filepath, replace=False):
         revised_filename = filename
         count = 1
 
+        # TODO: this doesnt work correctly with long file names
         directory_contents = os.listdir(filepath)
         if filename in directory_contents:
                 while revised_filename in directory_contents:
