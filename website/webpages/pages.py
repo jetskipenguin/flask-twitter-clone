@@ -40,17 +40,17 @@ def user(user):
         # Set follower count appropriately
         follower_count = 0
         following_count = 0
-        
+
         # Pull found_user's follower counts
         for i in found_user.followers:
             follower_count += 1
 
         for i in found_user.following:
             following_count += 1
-            
-
-        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts,follower_count=follower_count, following_count=following_count)
-
+        
+        profile_image = found_user.pfp_url
+        return render_template("profile.html", user=user, bio=found_user.bio, posts=user_posts,follower_count=follower_count, 
+                                following_count=following_count, pfp=profile_image)
     else:
         return render_template('profile.html')
 
