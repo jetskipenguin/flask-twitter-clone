@@ -90,7 +90,7 @@ def settings():
                 image = request.files["image"]
 
                 # saves with absolute path
-                directory = "{}\\{}".format(current_app.config['ABSOLUTE_IMAGE_UPLOADS'], session['user'])
+                directory = "{}/{}".format(current_app.config['ABSOLUTE_IMAGE_UPLOADS'], session['user'])
                 filename = allowed_image(image.filename, request.cookies.get("filesize"), directory, True)
                 
                 # if file is valid
@@ -100,7 +100,7 @@ def settings():
                     found_user = users.query.filter_by(name=session['user']).first()
                     if found_user:
                         # stores relative filepath in database and session
-                        filepath = "{}\\{}\\{}".format(current_app.config['RELATIVE_IMAGE_UPLOADS'], session['user'], current_app.config['PROFILE_FILENAME'])
+                        filepath = "{}/{}/{}".format(current_app.config['RELATIVE_IMAGE_UPLOADS'], session['user'], current_app.config['PROFILE_FILENAME'])
                         session['pfp_url'] = filepath
                         found_user.pfp_url = filepath
                         db.session.commit()
@@ -162,7 +162,7 @@ def create_post():
                     save_image(directory, filename, image)
 
                     # stores relative filepath
-                    image_src = "{}\\{}\\{}".format(current_app.config['RELATIVE_IMAGE_UPLOADS'], session['user'], filename)
+                    image_src = "{}/{}/{}".format(current_app.config['RELATIVE_IMAGE_UPLOADS'], session['user'], filename)
 
             text = request.form.get('text')
 
@@ -201,11 +201,11 @@ def login():
         else:
             print("Adding new user")
             # add new user to database
-            usr = users(user, '', 'static/images/default.jfif')
+            usr = users(user, '', current_app.config['DEFAULT_PFP'])
             db.session.add(usr)
             db.session.commit()
             # add default pfp url to session
-            session['pfp_url'] = 'static/images/default.jfif'
+            session['pfp_url'] = current_app.config['DEFAULT_PFP']
             session['email'] = ''
 
         flash('Login Successful')
